@@ -1,0 +1,38 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Chatting app",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "serve": "node lib/index.js",
+    "dev": "concurrently \"tsc -w\" \"nodemon lib/index.js\""
+  },
+  "author": "Amine Takha",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.8.0",
+    "axios": "^0.23.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "expo-server-sdk": "^3.6.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.11",
+    "multer": "^1.4.3",
+    "redis": "^3.1.2",
+    "socket.io": "^4.3.0",
+    "stripe": "^8.183.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/mongoose": "^5.11.97",
+    "@types/multer": "^1.4.7",
+    "@types/node": "^16.11.0",
+    "@types/socket.io": "^3.0.2",
+    "concurrently": "^6.3.0",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  }
+}
