@@ -18,6 +18,8 @@ const IndividualChat = props => {
     const [receiver, setReceiver] = useState(props.route.params.receiver);
     const [loading, setLoading] = useState(true);
     const [messages, setMessages] = useState([]);
+    const [page, setPage] = useState(0);
+    const [itemsPerPage] = useState(10);
     const auth = useSelector(state => state.auth);
     const [socket, setSocket] = useState(getSocket());
     const isFocused = useIsFocused();
@@ -26,8 +28,12 @@ const IndividualChat = props => {
 
     const getChatMessages = async () => {
         try {
-            const res = await axios.get(`${API_URL}/chat/messages/${auth.id}/${receiver}`)
+            const res = await axios.get(`${API_URL}/chat/messages/${auth.id}/${receiver}?page=${page}&items=${itemsPerPage}`)
             res.data.conversations? setMessages(res.data.conversations.messages) : setMessages([])
+            if(res.data.conversations){
+                setMessages([...res.data.conversations.messages.reverse(), ...messages]);
+                setPage(prev => prev + 1);
+            }
             setLoading(false)
         } catch (err) {
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
@@ -167,7 +173,7 @@ const IndividualChat = props => {
         <KeyboardAvoidingView style={{flex: 1}} keyboardVerticalOffset={headerHeight} behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <Chat messages={messages} />
+                    <Chat messages={messages} fetchMoreMessages={getChatMessages} />
                 </View>
                 <View>
                     <MessageControls textMessage={addTextMessage} voiceMessage={addVoiceMessage} />

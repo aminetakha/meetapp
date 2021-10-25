@@ -1,20 +1,30 @@
-import React, {useRef} from "react";
+import React, {useRef, useEffect} from "react";
 import {View, Text, ScrollView, StyleSheet} from "react-native";
 import Message from "./Message";
 
-const Chat = ({messages}) => {
+const Chat = ({messages, fetchMoreMessages}) => {
     const scrollViewRef = useRef();
     
+    const onScroll = e => {
+        if(!e.nativeEvent.contentOffset.y){
+            fetchMoreMessages();
+        }
+    }
+
+    useEffect(() => {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+    }, [])
+
     return messages.length === 0 ? (
-        <View>
-            <Text>No conversation has started yet</Text>
-            <Text>Go ahead and break the silence</Text>
+        <View style={styles.textContainer}>
+            <Text style={styles.text}>No conversation has started yet</Text>
+            <Text style={styles.text}>Go ahead and break the silence</Text>
         </View>
     ): (
         <ScrollView 
             style={styles.scrollView}
             ref={scrollViewRef}
-            onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+            onScroll={onScroll}
         >
             {messages.map((item, index) => (
                 <Message key={index} id={item._id} message={item.message} timestamp={item.timestamp} type={item.type} duration={item.duration} sender={item.sender} />
@@ -26,6 +36,16 @@ const Chat = ({messages}) => {
 const styles = StyleSheet.create({
     scrollView: {
         flex: 1
+    },
+    text: {
+        color: "#ccc",
+        textAlign: "center",
+        fontSize: 18,
+        fontFamily: "OpenSans",
+    },
+    textContainer: {
+        height: 300,
+        justifyContent: "flex-end"
     }
 })
 

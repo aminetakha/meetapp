@@ -25,7 +25,9 @@ router.get('/:id', async (req, res) => {
 
 router.get("/messages/:sender/:receiver", async (req, res) => {
     try {
-        const conversations = await getChatMessages(req.params.sender, req.params.receiver)
+        const {sender, receiver} = req.params;
+        const {page, items} = req.query;
+        const conversations = await getChatMessages(sender, receiver, parseInt(page as string), parseInt(items as string));
         res.status(200).json({conversations})
     } catch (err) {
         res.status(400).json({err})

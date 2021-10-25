@@ -92,8 +92,17 @@ export const getUserConversations = async (id) => {
     return conversations;
 }
 
-export const getChatMessages = async (sender, receiver) => {
-    const conversation = await Conversation.findOne({members: {$all: [sender, receiver]}}).populate("messages")
+export const getChatMessages = async (sender, receiver, page, items) => {
+    const conversation = await Conversation
+        .findOne({members: {$all: [sender, receiver]}})
+        .populate({
+            path: "messages",
+            options: {
+                skip: page * items,
+                limit: items,
+                sort: {timestamp: -1}
+            }
+        })
     return conversation;
 }
 
