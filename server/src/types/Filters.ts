@@ -3,5 +3,7 @@ export interface Filters {
     country: string;
     minAge: number;
     maxAge: number;
-    status: boolean
+    status: boolean;
+    page: number;
+    itemsPerPage: number;
 }

@@ -3,7 +3,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, ActivityIndicator, Image, TouchableOpacity, FlatList, Dimensions, StyleSheet, Alert} from 'react-native';
 import * as Notification from "expo-notifications";
 import {useDispatch, useSelector} from "react-redux";
-import { getSocket } from '../scoket';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from "@react-navigation/native";
 import { addCurrentUser } from '../actions/auth';
@@ -24,11 +23,10 @@ const HomeScreen = (props) => {
     const [refresh, setRefresh] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
-    const socket = getSocket()
     const isFocused = useIsFocused();
-    const dispatch = useDispatch();
-    const auth = useSelector(state => state.auth)
     const filters = useSelector(state => state.filters)
+    const [page, setPage] = useState(0);
+    const [itemsPerPage] = useState(8);
 
     useEffect(() => {
         notificationListener.current = Notification.addNotificationReceivedListener(notification => {
@@ -48,8 +46,6 @@ const HomeScreen = (props) => {
     useEffect(() => {
         if(isFocused){
             (async () => {
-                const d = await AsyncStorage.getItem("user");
-                console.log("ASYNC STORAGE", d)
                 await getActiveUsers()
                 setLoading(false)
             })()
@@ -58,8 +54,9 @@ const HomeScreen = (props) => {
 
     const getActiveUsers = async () => {
         try {
-            const res = await axios.get(`${API_URL}/users?minAge=${filters.minAge}&maxAge=${filters.maxAge}&country=${filters.country}&gender=${filters.gender}&status=${filters.status}`)
-            setActiveUsers(res.data.users)
+            const res = await axios.get(`${API_URL}/users?minAge=${filters.minAge}&maxAge=${filters.maxAge}&country=${filters.country}&gender=${filters.gender}&status=${filters.status}&page=${page}&items=${itemsPerPage}`)
+            setActiveUsers([...activeUsers, ...res.data.users]);
+            setPage(prev => prev + 1);
         } catch (err) {
             setActiveUsers([])
             console.log("ERROR HOME SCREEN", err)
@@ -102,8 +99,10 @@ const HomeScreen = (props) => {
                         keyExtractor={user => user._id} 
                         renderItem={renderUser}
                         numColumns={2}
-                        refreshing={false}
+                        refreshing={refresh}
                         onRefresh={onRefresh}
+                        onEndReachedThreshold={0.4}
+                        onEndReached={getActiveUsers}
                     />
                 ) : (
                     <View style={styles.textContainer}>

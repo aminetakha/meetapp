@@ -20,13 +20,15 @@ const upload = multer({ storage });
 const router = Router();
 
 router.get("/", async (req, res) => {
-    const {gender, country, minAge, maxAge, status} = req.query;
+    const {gender, country, minAge, maxAge, status, page, items} = req.query;
     const filters: Filters = {
         gender: gender as string,
         country: country as string,
         minAge: parseInt(minAge as string),
         maxAge: parseInt(maxAge as string),
-        status: status === "online"? true : false
+        status: status === "online"? true : false,
+        page: parseInt(page as string),
+        itemsPerPage: parseInt(items as string)
     }
     const users = await getActiveUsers(filters);
     res.json({users})

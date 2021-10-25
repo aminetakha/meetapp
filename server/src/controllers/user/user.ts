@@ -1,5 +1,4 @@
 import { User } from "../../models/User";
-import { stripe } from "../../routes";
 import { Filters } from "../../types/Filters";
 import { UserInfo } from "../../types/UserInfo";
 import { findUserById, findUserByProviderId } from "../auth"
@@ -38,7 +37,7 @@ export const updateUsernameAndAbout = async (user) => {
 }
 
 export const getActiveUsers = async (filters: Filters) => {
-    const {country, gender, status, minAge, maxAge} = filters;
+    const {country, gender, status, minAge, maxAge, page, itemsPerPage} = filters;
     const minDate = new Date(`${2021-minAge}-1-1`).toISOString();
     const maxDate = new Date(`${2021-maxAge}-1-1`).toISOString();
     let users;
@@ -49,26 +48,27 @@ export const getActiveUsers = async (filters: Filters) => {
                 country: country,
                 gender: gender,
                 birthdate: { $lt: minDate, $gt: maxDate },
-            });
-    }else if(!country && !gender){users = await User.find(
+            }).skip(page * itemsPerPage).limit(itemsPerPage);
+    }else if(!country && !gender){
+        users = await User.find(
             {
                 active: status,
                 birthdate: { $lt: minDate, $gt: maxDate },
-            });
+            }).skip(page * itemsPerPage).limit(itemsPerPage);
     }else if(country){
         users = await User.find(
             {
                 active: status, 
                 country: country,
                 birthdate: { $lt: minDate, $gt: maxDate },
-            });
+            }).skip(page * itemsPerPage).limit(itemsPerPage);
     }else if(gender){
         users = await User.find(
             {
                 active: status,
                 gender: gender, 
                 birthdate: { $lt: minDate, $gt: maxDate },
-            });
+            }).skip(page * itemsPerPage).limit(itemsPerPage);
     }
     return users;
 }

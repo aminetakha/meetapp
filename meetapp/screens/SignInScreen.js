@@ -52,14 +52,14 @@ const SignInScreen = (props) => {
     }
 
     const navigateToMain = async () => {
-        /*const user = await chechAuth();
+        const user = await chechAuth();
         if(user){
             dispatch({type: "CURRENT_USER", payload: user})
             socket.emit('currentUser', user._id);
             props.navigation.navigate("Main")
         }
-        setLoading(false);*/
-        await AsyncStorage.removeItem("user")
+        setLoading(false);
+        // await AsyncStorage.removeItem("user")
     }
 
     return (
