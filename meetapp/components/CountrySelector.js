@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import { View, Text, Modal, StyleSheet, ScrollView } from 'react-native'
+import { Ionicons } from "@expo/vector-icons"
 import Country from './Country';
 import { countries } from '../data/countries'
+import { COLORS } from "../colors"
 
 const CountrySelector = ({show, hide, onChange}) => {
     const [modalVisible] = useState(show);
@@ -14,7 +16,7 @@ const CountrySelector = ({show, hide, onChange}) => {
     }
     const renderCountries = (item) => {
         return (
-            <Country country={item} onChange={value => onSelectCountry(value)} />
+            <Country key={item.code} country={item} onChange={value => onSelectCountry(value)} />
         )
     }
 
@@ -33,8 +35,10 @@ const CountrySelector = ({show, hide, onChange}) => {
             >
                 <View style={styles.container}>
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Choose your country</Text>
-
+                        <View style={styles.header}>
+                            <Ionicons name="arrow-back" size={30} color={COLORS.primary} onPress={hide} />
+                            <Text style={styles.modalText}>Country</Text>
+                        </View>
                         <ScrollView
                             onScroll={({nativeEvent}) => {
                                 const {contentOffset, contentSize, layoutMeasurement} = nativeEvent;
@@ -43,8 +47,8 @@ const CountrySelector = ({show, hide, onChange}) => {
                                 }
                             }}
                         >
-                            {countriesList.map(country => {
-                                return renderCountries(country)
+                            {countriesList.map((country, index) => {
+                                return renderCountries(country, index)
                             })}
                         </ScrollView>
                     </View>
@@ -61,13 +65,10 @@ const styles = StyleSheet.create({
     modalView: {
         flex: 1,
         backgroundColor: 'white',
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
         borderTopWidth: 2,
         borderRightWidth: 2,
         borderLeftWidth: 2,
         borderColor: "#ccc",
-        marginTop: 50,
         paddingHorizontal: 20
     },
     openButton: {
@@ -79,11 +80,16 @@ const styles = StyleSheet.create({
     modalText: {
         marginVertical: 35,
         fontSize: 21,
-        textAlign: 'center',
-        color: "crimson"
+        color: COLORS.primary,
+        fontFamily: "OpenSans",
+        marginLeft: 18
     },
     countryContainer: {
-        paddingVertical: 17
+        paddingVertical: 18
+    },
+    header: {
+        flexDirection: "row", 
+        alignItems: "center"
     }
 });
 

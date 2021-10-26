@@ -3,8 +3,8 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 
 const Country = ({country, onChange}) => {
     return (
-        <TouchableOpacity key={country.code} style={styles.countryContainer} onPress={() => onChange(country)}>
-            <Text style={{ fontSize: 15 }}>
+        <TouchableOpacity style={styles.countryContainer} onPress={() => onChange(country)}>
+            <Text style={styles.text}>
                 {country.name}
             </Text>
         </TouchableOpacity>
@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: "#ccc"
     },
+    text: {
+        fontSize: 15,
+        fontFamily: "OpenSans"
+    }
 })
 
 export default React.memo(Country)
