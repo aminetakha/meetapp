@@ -96,7 +96,7 @@ const ProfileScreen = (props) => {
     }
 
     return (
-        <ScrollView style={styles.scrollView}>
+        <ScrollView style={styles.scrollView} keyboardDismissMode='on-drag' keyboardShouldPersistTaps="always" >
             <View style={{ alignItems: "center", paddingHorizontal: 23, paddingVertical: 35 }}>
                 <View style={styles.imageContainer}>
                     <Image source={{uri: `${API_URL}/${image}`}} style={{ width: 150, height: 150, borderRadius: 75 }} />

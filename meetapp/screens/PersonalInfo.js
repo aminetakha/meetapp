@@ -108,7 +108,7 @@ const PersonalInfo = (props) => {
 
     return (
         <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios"? "padding" : "height"}>
-            <ScrollView>
+            <ScrollView keyboardDismissMode='on-drag' keyboardShouldPersistTaps="always">
                 <TouchableOpacity style={styles.container} activeOpacity={1} onPress={exit}>
                     <View>
                         <Text style={styles.text}>Create Profile</Text>
