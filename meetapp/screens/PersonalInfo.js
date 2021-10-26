@@ -15,12 +15,12 @@ const { width, height } = Dimensions.get("window");
 const PersonalInfo = (props) => {
     const [username, setUsername] = useState("")
     const [gender, setGender] = useState('male');
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date(`${YEAR - 18}-12-31`));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [showCountryPicker, setShowCountryPicker] = useState(false);
     const headerHeight = useHeaderHeight();
-    const [country, setCountry] = useState("Morocco")
+    const [country, setCountry] = useState("")
     const [about, setAbout] = useState("")
     const [loading, setLoading] = useState(false)
     const auth = useSelector(state => state.auth)
@@ -30,11 +30,14 @@ const PersonalInfo = (props) => {
     // Error messages
     const [usernameError, setUsernameError] = useState("");
     const [aboutError, setAboutError] = useState("");
+    const [countryError, setCountryError] = useState("")
+    const [dateError, setDateError] = useState("");
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        setDateError("")
     };
 
     const showMode = (currentMode) => {
@@ -56,6 +59,11 @@ const PersonalInfo = (props) => {
         setAbout(value)
     }
 
+    const onCountryChange = value => {
+        setCountry(value);
+        setCountryError("");
+    }
+
     const changed = value => {
         setGender(value)
     }
@@ -67,12 +75,16 @@ const PersonalInfo = (props) => {
             setUsernameError("Name should be between 3 and 16 characters");
             isValid = false;
         }
-        if(country.trim().length < 0){
+        if(country.trim().length === 0){
             setCountryError("Please select your country");
             isValid = false;
         }
         if(about.trim().length <= 10){
             setAboutError("Please tell us about yourself");
+            isValid = false;
+        }
+        if(!date){
+            setDateError("Please select your birthdate");
             isValid = false;
         }
         return isValid;
@@ -132,35 +144,41 @@ const PersonalInfo = (props) => {
                         </View>
                     </View>
 
-                    <View style={{marginVertical: 15, flexDirection: 'row', alignItems: "center", justifyContent: "space-between"}}>
-                        <View>
-                            <Text style={styles.label}>Country</Text>
+                    <View style={{marginVertical: 15}}>
+                        <View style={{flexDirection: 'row', alignItems: "center", justifyContent: "space-between"}}>
+                            <View>
+                                <Text style={styles.label}>Country</Text>
+                            </View>
+                            <TouchableOpacity activeOpacity={0.7} style={{flexDirection: 'row'}} onPress={() => setShowCountryPicker(true)}>
+                                <Text style={{marginRight: 7, fontFamily: 'OpenSans'}}>{country === "" ? "Choose country" : country}</Text>
+                                <Ionicons name="chevron-forward-outline" size={18} />
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity activeOpacity={0.7} style={{flexDirection: 'row'}} onPress={() => setShowCountryPicker(true)}>
-                            <Text style={{marginRight: 7, fontFamily: 'OpenSans'}}>{country === "" ? "Choose country" : country}</Text>
-                            <Ionicons name="chevron-forward-outline" size={18} />
-                        </TouchableOpacity>
+                        {countryError.length > 0 && <Text style={styles.error}>{countryError}</Text>}
                     </View>
 
-                    <View style={{marginVertical: 15, flexDirection: 'row', alignItems: "center", justifyContent: "space-between"}}>
-                        <View>
-                            <Text style={styles.label}>Birthdate</Text>
+                    <View style={{marginVertical: 15}}>
+                        <View style={{flexDirection: 'row', alignItems: "center", justifyContent: "space-between"}}>
+                            <View>
+                                <Text style={styles.label}>Birthdate</Text>
+                            </View>
+                            <TouchableOpacity activeOpacity={0.7} onPress={showDatepicker} style={{flexDirection: 'row', alignItems: "center"}}>
+                                <Text style={{marginRight: 7}}>{date? `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}` : "Pick your birthdate"}</Text>
+                                <Ionicons name="calendar-outline" size={27} />
+                                {show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={date}
+                                        mode={mode}
+                                        is24Hour={true}
+                                        maximumDate={new Date(`${YEAR - 18}-12-31`)}
+                                        minimumDate={new Date(YEAR - 60, 1, 1)}
+                                        onChange={onChange}
+                                    />
+                                )}
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity activeOpacity={0.7} onPress={showDatepicker} style={{flexDirection: 'row', alignItems: "center"}}>
-                            <Text style={{marginRight: 7}}>{`${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`}</Text>
-                            <Ionicons name="calendar-outline" size={27} />
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={true}
-                                    maximumDate={new Date(YEAR - 18, 12, 31)}
-                                    minimumDate={new Date(YEAR - 60, 1, 1)}
-                                    onChange={onChange}
-                                />
-                            )}
-                        </TouchableOpacity>
+                        {dateError.length > 0 && <Text style={styles.error}>{dateError}</Text>}
                     </View>
 
                     <View style={styles.spaceVertical}>
@@ -179,7 +197,7 @@ const PersonalInfo = (props) => {
                 <CountrySelector 
                     show={showCountryPicker} 
                     hide={() => setShowCountryPicker(false)} 
-                    onChange={value => setCountry(value)}
+                    onChange={onCountryChange}
                 />
             }
         </KeyboardAvoidingView>
