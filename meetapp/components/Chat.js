@@ -12,7 +12,9 @@ const Chat = ({messages, fetchMoreMessages}) => {
     }
 
     useEffect(() => {
-        scrollViewRef.current.scrollToEnd({ animated: true });
+        if(scrollViewRef.current){
+            scrollViewRef.current.scrollToEnd({ animated: true });
+        }
     }, [])
 
     return messages.length === 0 ? (
@@ -44,8 +46,7 @@ const styles = StyleSheet.create({
         fontFamily: "OpenSans",
     },
     textContainer: {
-        height: 300,
-        justifyContent: "flex-end"
+        marginTop: 30
     }
 })
 
