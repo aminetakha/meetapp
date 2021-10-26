@@ -32,16 +32,22 @@ const MessageControls = ({textMessage, voiceMessage}) => {
     }
 
     const stopRecording = async () => {
-        setRecording(undefined);
-        await recording.stopAndUnloadAsync();
-        const uri = recording.getURI();
-        const lastSlashIndex = uri.lastIndexOf("/");
-        const filename = uri.slice(lastSlashIndex);
-        const destination = await (FileSystem.documentDirectory + "Audio" + filename);
-        await FileSystem.moveAsync({from: uri, to: destination})
-        const duration = Math.floor(recording._finalDurationMillis / 1000);
-        voiceMessage(destination, duration);
-        await FileSystem.deleteAsync(uri, {idempotent: true})
+        try {
+			if(recording){
+				setRecording(undefined);
+				await recording.stopAndUnloadAsync();
+				const uri = recording.getURI();
+				const lastSlashIndex = uri.lastIndexOf("/");
+				const filename = uri.slice(lastSlashIndex);
+				const destination = await (FileSystem.documentDirectory + "Audio" + filename);
+				await FileSystem.moveAsync({from: uri, to: destination})
+				const duration = Math.floor(recording._finalDurationMillis / 1000);
+				voiceMessage(destination, duration);
+				await FileSystem.deleteAsync(uri, {idempotent: true})
+			}
+		} catch (error) {
+			console.log("error", error)
+		}
     }
 
 	const onLongPress = async () => {
@@ -64,7 +70,7 @@ const MessageControls = ({textMessage, voiceMessage}) => {
 				</View>
 			}
 			<View>
-                <Pressable delayLongPress={250} onLongPress={onLongPress} onPressOut={onPressOut}>
+                <Pressable pressRetentionOffset={{ bottom: 180, left: 180, right: 180, top: 180 }} delayLongPress={400} onLongPress={onLongPress} onPressOut={onPressOut}>
                     <Ionicons color={pressed? "crimson":'#457B9D'} name={pressed? "mic": "mic-outline"} size={pressed? 60 : 28} />
                 </Pressable>
             </View>

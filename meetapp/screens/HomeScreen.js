@@ -46,6 +46,7 @@ const HomeScreen = (props) => {
     useEffect(() => {
         if(isFocused){
             (async () => {
+                setPage(0)
                 await getActiveUsers()
                 setLoading(false)
             })()
