@@ -37,7 +37,7 @@ const IndividualChat = props => {
             setLoading(false)
         } catch (err) {
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
-            setMessage([])
+            setMessages([])
             setLoading(false)
         }
     }
