@@ -39,7 +39,6 @@ const ConversationScreen = (props) => {
         }catch(error){
             setConversations([])
             setLoading(false)
-            console.log(error)
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
         }
     }

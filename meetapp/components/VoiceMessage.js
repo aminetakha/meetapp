@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Progress from "./Progress";
 import { Audio } from 'expo-av';
 import { useSelector } from "react-redux";
-import {date, formatSeconds} from "../config/date";
+import {date} from "../config/date";
 import {COLORS} from "../colors";
 
 const VoiceMessage = ({message}) => {

@@ -5,9 +5,6 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import Cam from '../components/Camera';
 import {useSelector, useDispatch} from 'react-redux'
-import * as FileSystem from 'expo-file-system';
-import { API_URL } from '../config';
-import axios from "axios";
 import {COLORS} from "../colors"
 
 const UploadImageScreen = (props) => {
@@ -16,7 +13,6 @@ const UploadImageScreen = (props) => {
     const [loading, setLoading] = useState(false)
 
     const { showActionSheetWithOptions } = useActionSheet();
-    const auth = useSelector(state => state.auth)
     const dispatch = useDispatch();
 
     const uploadFromGallery = async () => {

@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Text, View, StyleSheet, TextInput, Dimensions, ScrollView, Alert, TouchableOpacity, Platform, Keyboard, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
+import { Text, View, StyleSheet, TextInput, Dimensions, ScrollView, Alert, TouchableOpacity, Platform, Keyboard, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioGroup from "../components/RadioGroup";
@@ -11,7 +11,6 @@ import { createUser } from '../actions/auth';
 import {COLORS} from "../colors";
 
 const YEAR = new Date().getFullYear();
-const { width, height } = Dimensions.get("window");
 const PersonalInfo = (props) => {
     const [username, setUsername] = useState("")
     const [gender, setGender] = useState('male');
@@ -19,11 +18,9 @@ const PersonalInfo = (props) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [showCountryPicker, setShowCountryPicker] = useState(false);
-    const headerHeight = useHeaderHeight();
     const [country, setCountry] = useState("")
     const [about, setAbout] = useState("")
     const [loading, setLoading] = useState(false)
-    const auth = useSelector(state => state.auth)
     const profile = useSelector(state => state.profile)
     const dispatch = useDispatch()
 

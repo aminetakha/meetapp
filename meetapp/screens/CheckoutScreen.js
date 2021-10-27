@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { Alert, Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, Text, View } from 'react-native';
 import { useStripe } from '@stripe/stripe-react-native';
 import PaymentScreen from '../components/PaymentScreen';
 import Button from "../components/Button";

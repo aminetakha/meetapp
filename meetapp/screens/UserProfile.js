@@ -8,7 +8,7 @@ import {COLORS} from "../colors";
 
 const {width} = Dimensions.get("window");
 const UserProfile = (props) => {
-    const [receiver, setReceiver] = useState(props.route.params.receiver);
+    const [receiver] = useState(props.route.params.receiver);
     const isFocused = useIsFocused();
     const auth = useSelector(state => state.auth)
 

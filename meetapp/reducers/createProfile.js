@@ -24,15 +24,6 @@ export default (state = initialState, action) => {
 				...state,
 				image: action.payload
 			}
-		case "PERSONAL_INFO":
-			return {
-				...state,
-				username: payload.username,
-	            gender: payload.gender,
-	            date: payload.date,
-	            country: payload.country,
-	            about: payload.about,
-			}
 		default:
 			return state
 	}

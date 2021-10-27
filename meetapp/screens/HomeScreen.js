@@ -2,10 +2,8 @@ import axios from 'axios';
 import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, ActivityIndicator, Image, TouchableOpacity, FlatList, Dimensions, StyleSheet, Alert} from 'react-native';
 import * as Notification from "expo-notifications";
-import {useDispatch, useSelector} from "react-redux";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useSelector} from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import { addCurrentUser } from '../actions/auth';
 import { API_URL } from '../config';
 
 Notification.setNotificationHandler({
@@ -60,7 +58,6 @@ const HomeScreen = (props) => {
             setPage(prev => prev + 1);
         } catch (err) {
             setActiveUsers([])
-            console.log("ERROR HOME SCREEN", err)
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
         }
     }

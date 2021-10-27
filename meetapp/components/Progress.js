@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import CountDown from './CountDown';
 
 const Progress = ({value, width, height, primary, secondary, max, borderRadius, start, finish, onProgress, textColor}) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import TextMessage from './TextMessage';
 import VoiceMessage from "./VoiceMessage";
 import MessageModel from "../models/MessageModel";

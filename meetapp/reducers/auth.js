@@ -13,15 +13,6 @@ const initialState = {
 
 export default (state=initialState, action) => {
     switch(action.type){
-        case "CREATE_USER":
-            return {
-                ...state,
-                id: action.payload.id,
-                providerId: action.payload.providerId,
-                username: action.payload.username,
-                pushToken: action.payload.pushToken,
-                tokens: 10
-            }
         case "CURRENT_USER":
             return {
                 ...state,

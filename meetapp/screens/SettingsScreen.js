@@ -6,7 +6,6 @@ import RadioGroup from "../components/RadioGroup";
 import RadioGroupItem from "../components/RadioGroupItem";
 import CountrySelector from "../components/CountrySelector";
 import {useDispatch} from "react-redux";
-import { useHeaderHeight } from '@react-navigation/elements';
 import { updateFilters } from '../actions/filters';
 import Toast from 'react-native-root-toast';
 import { useIsFocused } from "@react-navigation/native";
@@ -18,14 +17,11 @@ const CustomMarker = () => {
     )
 }
 
-const { width, height } = Dimensions.get("window");
 const SettingsScreen = (props) => {
     const [country, setCountry] = useState("");
     const [gender, setGender] = useState('');
-    const [show, setShow] = useState(false);
     const [values, setValues] = useState([18, 60]);
     const [showCountryPicker, setShowCountryPicker] = useState(false);
-    const headerHeight = useHeaderHeight();
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
 

@@ -42,15 +42,6 @@ const IndividualChat = props => {
         }
     }
 
-    /*const recordedUriToBase64 = async (uri) => {
-        try {
-            const data = await FileSystem.readAsStringAsync(uri, {encoding: FileSystem.EncodingType.Base64})
-            return data
-        } catch (error) {
-            console.log("ERROR IN GETTING THE RECORDED SOUND", error)
-        }
-    }*/
-
     const showRewardAd = async () => {
         try{
             await AdMobRewarded.setAdUnitID('ca-app-pub-3940256099942544/5224354917');
@@ -71,9 +62,7 @@ const IndividualChat = props => {
         if(auth.tokens > 0){
             let textVoiceMessage = {url: "", data: ""}
             if(type === "voice"){
-                // const data = await recordedUriToBase64(message);
                 textVoiceMessage.url = filename;
-                // textVoiceMessage.data = data;
                 await FileSystem.uploadAsync("http://192.168.1.12:5000/chat/upload-audio", message, {
                     fieldName: "audio",
                     httpMethod: "POST",
@@ -129,8 +118,6 @@ const IndividualChat = props => {
 
     const onRecord = async data => {
         const uri = data.recordUri;
-        console.log(uri)
-        //await FileSystem.writeAsStringAsync(FileSystem.documentDirectory + "Audio/" + uri, data.message, { encoding: FileSystem.EncodingType.Base64 });
         setMessages(prev => [...prev, {_id: Math.random(), sender: receiver, message: uri, timestamp: data.timestamp, type: "voice", duration: data.duration}])
     }
 

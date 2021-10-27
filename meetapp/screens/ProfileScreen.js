@@ -16,7 +16,7 @@ const ProfileScreen = (props) => {
     const auth = useSelector(state => state.auth);
     const [username, setUsername] = useState(auth.username);
     const [about, setAbout] = useState(auth.about);
-    const [country, setCountry] = useState(auth.country);
+    const [country] = useState(auth.country);
     const [image, setImage] = useState(auth.image || null);
     const [loading, setLoading] = useState(false)
     const USER_BIRTH_YEAR = new Date(auth.birthdate).getFullYear();
