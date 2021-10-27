@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {View, Text, ActivityIndicator, Image, StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import {View, Text, ActivityIndicator, Image, StyleSheet, ScrollView, TouchableOpacity, Alert, RefreshControl} from 'react-native';
 import {useSelector} from "react-redux"
 import axios from "axios"
 import { useIsFocused } from "@react-navigation/native";
@@ -9,6 +9,7 @@ import {date} from "../config/date"
 const ConversationScreen = (props) => {
     const auth = useSelector(state => state.auth)
     const [loading, setLoading] = useState(false)
+    const [refresh, onRefresh] = useState(false)
     const [conversations, setConversations] = useState([])
     const isFocused = useIsFocused();
 
@@ -44,7 +45,12 @@ const ConversationScreen = (props) => {
     }
 
     return (
-        <ScrollView style={styles.scrollView}>
+        <ScrollView 
+            style={styles.scrollView}
+            refreshControl={
+                <RefreshControl refreshing={refresh} onRefresh={getConversations} />
+            }
+        >
             {loading? <ActivityIndicator color='crimson' size="large" />: 
                 conversations.length > 0 ? conversations.map((conversation) => (
                     <TouchableOpacity key={conversation._id} style={styles.conversationContainer} 
