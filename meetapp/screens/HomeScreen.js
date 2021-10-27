@@ -3,7 +3,6 @@ import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, ActivityIndicator, Image, TouchableOpacity, FlatList, Dimensions, StyleSheet, Alert} from 'react-native';
 import * as Notification from "expo-notifications";
 import {useSelector} from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
 import { API_URL } from '../config';
 
 Notification.setNotificationHandler({
@@ -21,7 +20,6 @@ const HomeScreen = (props) => {
     const [refresh, setRefresh] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
-    const isFocused = useIsFocused();
     const filters = useSelector(state => state.filters)
     const [page, setPage] = useState(0);
     const [itemsPerPage] = useState(8);
@@ -42,20 +40,20 @@ const HomeScreen = (props) => {
     }, [])
 
     useEffect(() => {
-        if(isFocused){
-            (async () => {
-                setPage(0)
-                await getActiveUsers()
-                setLoading(false)
-            })()
-        }
-    }, [isFocused])
+        getActiveUsers(0, false);
+    }, [])
 
-    const getActiveUsers = async () => {
+    const getActiveUsers = async (page, isRefreshing) => {
         try {
             const res = await axios.get(`${API_URL}/users?minAge=${filters.minAge}&maxAge=${filters.maxAge}&country=${filters.country}&gender=${filters.gender}&status=${filters.status}&page=${page}&items=${itemsPerPage}`)
-            setActiveUsers([...activeUsers, ...res.data.users]);
-            setPage(prev => prev + 1);
+            if(isRefreshing){
+                setActiveUsers(res.data.users);
+                setPage(0);
+            }else{
+                setActiveUsers([...activeUsers, ...res.data.users]);
+                setPage(prev => prev + 1);
+            }
+            setLoading(false)
         } catch (err) {
             setActiveUsers([])
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
@@ -71,7 +69,7 @@ const HomeScreen = (props) => {
     const onRefresh = async () => {
         (async () => {
             setRefresh(true)
-            await getActiveUsers()
+            await getActiveUsers(0, true)
             setRefresh(false)
         })()
     }
@@ -99,8 +97,8 @@ const HomeScreen = (props) => {
                         numColumns={2}
                         refreshing={refresh}
                         onRefresh={onRefresh}
-                        onEndReachedThreshold={0.4}
-                        onEndReached={getActiveUsers}
+                        onEndReachedThreshold={0.3}
+                        onEndReached={() => getActiveUsers(page, false)}
                     />
                 ) : (
                     <View style={styles.textContainer}>
@@ -115,7 +113,7 @@ const HomeScreen = (props) => {
 
 const styles = StyleSheet.create({
     root: {
-        paddingVertical: 15
+        paddingTop: 15
     },
     container: {
         width: Math.floor(width / 2), 
@@ -130,7 +128,8 @@ const styles = StyleSheet.create({
         borderRightWidth: 1, 
         borderLeftWidth: 1, 
         borderBottomWidth: 1, 
-        borderColor: "#ccc"
+        borderColor: "#ccc",
+        height: 80
     },
     text: {
         color: "#ccc",

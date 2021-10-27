@@ -38,7 +38,7 @@ export const updateUsernameAndAbout = async (user) => {
 
 export const getActiveUsers = async (filters: Filters) => {
     const {country, gender, status, minAge, maxAge, page, itemsPerPage} = filters;
-    const minDate = new Date(`${2021-minAge}-1-1`).toISOString();
+    const minDate = new Date(`${2021-minAge}-12-31`).toISOString();
     const maxDate = new Date(`${2021-maxAge}-1-1`).toISOString();
     let users;
     if(country && gender){
