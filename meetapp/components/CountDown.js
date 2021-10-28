@@ -2,14 +2,14 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { formatSeconds } from "../config/date";
 
-const CountDown = ({total, elapsedMinutes, elapsedSeconds, textColor}) => {
+const CountDown = ({timer, textColor}) => {
     return React.useMemo(() => (
         <View style={{ marginTop: 5 }}>
             <Text style={{ fontFamily: 'OpenSans', color: textColor }}>
-                {total.getMinutes() - elapsedMinutes}:{formatSeconds(total.getSeconds() - elapsedSeconds)}
+                {new Date(timer).getMinutes()}:{formatSeconds(new Date(timer).getSeconds())}
             </Text>
         </View>
-    ), [elapsedSeconds, elapsedSeconds]);
+    ), [timer]);
 }
 
 export default CountDown;

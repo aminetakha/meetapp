@@ -49,10 +49,8 @@ const Progress = ({value, width, height, primary, secondary, max, borderRadius, 
         <View style={{width: width+offset, height, backgroundColor: secondary, borderRadius}}>
             <View style={{ width: Math.ceil(controls.currentSteps), backgroundColor: primary, height, borderRadius }}></View>
             {React.useMemo(() => <CountDown 
-                total={total} 
+                timer={total - new Date(controls.elapsed)}
                 textColor={textColor}
-                elapsedMinutes={new Date(controls.elapsed).getMinutes()} 
-                elapsedSeconds={new Date(controls.elapsed).getSeconds()}
             />, [controls.elapsed])}
         </View>
     )
