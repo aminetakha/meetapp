@@ -1,9 +1,11 @@
 import React, {useRef, useEffect} from "react";
 import {View, Text, ScrollView, StyleSheet} from "react-native";
+import { useSelector } from "react-redux";
 import Message from "./Message";
 
 const Chat = ({messages, fetchMoreMessages}) => {
     const scrollViewRef = useRef();
+    const chat = useSelector(state => state.chat);
     
     const onScroll = e => {
         if(!e.nativeEvent.contentOffset.y){
@@ -27,6 +29,7 @@ const Chat = ({messages, fetchMoreMessages}) => {
             style={styles.scrollView}
             ref={scrollViewRef}
             onScroll={onScroll}
+            scrollEnabled={chat.scrollStatus}
         >
             {messages.map((item, index) => (
                 <Message key={index} id={item._id} message={item.message} timestamp={item.timestamp} type={item.type} duration={item.duration} sender={item.sender} />

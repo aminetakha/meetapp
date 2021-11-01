@@ -24,7 +24,7 @@ const VoiceMessage = ({message}) => {
 	const playSound = async uri => {
 		const { sound } = await Audio.Sound.createAsync({uri: `http://192.168.1.12:5000/${uri}`});
         setSound(sound);
-        setPlay(prev => !prev);
+        setPlay(true);
         await sound.playFromPositionAsync(seek);
 	}
 
@@ -34,6 +34,10 @@ const VoiceMessage = ({message}) => {
 	}
 
 	const onProgress = value => {
+		setSeek(value);
+	}
+
+	const seekTo = async value => {
 		setSeek(value);
 	}
 
@@ -47,7 +51,7 @@ const VoiceMessage = ({message}) => {
 		>
 			<View>
                 <View style={{flexDirection: "row", alignItems: "center"}}>
-                    <Progress textColor={message.sender === auth.id? "black" : "white"} onProgress={onProgress} start={play} finish={() => setPlay(false)} value={0} width={150} height={5} primary={COLORS.primary} secondary={COLORS.lightPrimary} max={message.duration} borderRadius={10} />
+                    <Progress textColor={message.sender === auth.id? "black" : "white"} seekTo={seekTo} onProgress={onProgress} start={play} finish={() => setPlay(false)} value={0} width={150} height={5} primary={COLORS.primary} secondary={COLORS.lightPrimary} max={message.duration} />
                     <Ionicons name={play ? "pause" : "play" } size={35} color={message.sender === auth.id? "#457B9D": "#A5F3FC"} onPress={() => playOrPause(message.message)} />
                 </View>
             </View>
