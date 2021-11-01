@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, {useEffect, useState, useRef} from 'react';
-import {Text, View, ActivityIndicator, Image, TouchableOpacity, FlatList, Dimensions, StyleSheet, Alert} from 'react-native';
+import {Text, View, ActivityIndicator, Image, TouchableOpacity, FlatList, Dimensions, StyleSheet, Alert, ScrollView, RefreshControl} from 'react-native';
 import * as Notification from "expo-notifications";
 import {useSelector} from "react-redux";
 import { API_URL } from '../config';
@@ -40,7 +40,10 @@ const HomeScreen = (props) => {
     }, [])
 
     useEffect(() => {
-        getActiveUsers(0, false);
+        (async () => {
+            await getActiveUsers(0, false);
+            setLoading(false)
+        })()
     }, [])
 
     const getActiveUsers = async (page, isRefreshing) => {
@@ -48,12 +51,11 @@ const HomeScreen = (props) => {
             const res = await axios.get(`${API_URL}/users?minAge=${filters.minAge}&maxAge=${filters.maxAge}&country=${filters.country}&gender=${filters.gender}&status=${filters.status}&page=${page}&items=${itemsPerPage}`)
             if(isRefreshing){
                 setActiveUsers(res.data.users);
-                setPage(0);
+                setPage(1);
             }else{
                 setActiveUsers([...activeUsers, ...res.data.users]);
                 setPage(prev => prev + 1);
             }
-            setLoading(false)
         } catch (err) {
             setActiveUsers([])
             Alert.alert("An error occured", "Please try again", [{text: "Ok", style: "default"}])
@@ -86,6 +88,12 @@ const HomeScreen = (props) => {
         )
     }
 
+    const onEndReached = async () => {
+        if(activeUsers.length >= 8){
+            await getActiveUsers(page, false);
+        }
+    }
+
     return (
         <View style={styles.root}>
             {loading? <ActivityIndicator size="large" color="crimson" /> : 
@@ -98,12 +106,20 @@ const HomeScreen = (props) => {
                         refreshing={refresh}
                         onRefresh={onRefresh}
                         onEndReachedThreshold={0.3}
-                        onEndReached={() => getActiveUsers(page, false)}
+                        onEndReached={onEndReached}
                     />
                 ) : (
-                    <View style={styles.textContainer}>
+                    <ScrollView 
+                        contentContainerStyle={styles.textContainer} 
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refresh}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                    >
                         <Text style={styles.text}>There are no active users</Text>
-                    </View>
+                    </ScrollView>
                 )
             }
             
@@ -113,7 +129,8 @@ const HomeScreen = (props) => {
 
 const styles = StyleSheet.create({
     root: {
-        paddingTop: 15
+        paddingTop: 15,
+        flex: 1
     },
     container: {
         width: Math.floor(width / 2), 
@@ -138,8 +155,8 @@ const styles = StyleSheet.create({
         fontFamily: "OpenSans",
     },
     textContainer: {
-        height: 300,
-        justifyContent: "flex-end"
+        flex: 1,
+        justifyContent: "center"
     },
     info: {
         fontFamily: "OpenSans"
